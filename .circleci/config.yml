@@ -10,8 +10,27 @@ jobs:
     # See: https://circleci.com/docs/configuration-reference/#executor-job
     docker:
       - image: cimg/base:2023.12
+      - image: copo/copo-redis:redis-v6.2.6.18
+        name: copo_redis
+
+      - image: postgres:15-bullseye
+        name: copo_postgres
+        environment:
+          POSTGRES_DB: copo
+          POSTGRES_USER: copo_user
+          POSTGRES_PASSWORD: password
+
+      - image: copo/copo-mongo:v7.0.1
+        name: copo_mongo
+        environment:
+          MONGO_INITDB_ROOT_USERNAME: copo_admin
+          MONGO_INITDB_ROOT_PASSWORD: password
+          MONGO_USER: copo_user
+          MONGO_USER_PASSWORD: password
+          MONGO_DB: copo_mongo 
+
       - image: copo/copo-new-web:v2.0.4
-        #name: copo-new.cyverseuk.org
+        name: copo_web 
         environment:
           ENVIRONMENT_TYPE: demo
           ASPERA_PLUGIN_DIRECTORY: aspera_linux_plugin
@@ -55,32 +74,13 @@ jobs:
           ENA_V2_SERVICE_ASYNC: https://wwwdev.ebi.ac.uk/ena/submit/webin-v2/submit/queue
           B2DROP_PERMITS: /copo/b2drop/permits
           
-      - image: copo/copo-redis:redis-v6.2.6.18
-        name: copo_redis
-
-      - image: postgres:15-bullseye
-        name: copo_postgres
-        environment:
-          POSTGRES_DB: copo
-          POSTGRES_USER: copo_user
-          POSTGRES_PASSWORD: password
-
-      - image: copo/copo-mongo:v7.0.1
-        name: copo_mongo
-        environment:
-          MONGO_INITDB_ROOT_USERNAME: copo_admin
-          MONGO_INITDB_ROOT_PASSWORD: password
-          MONGO_USER: copo_user
-          MONGO_USER_PASSWORD: password
-          MONGO_DB: copo_mongo 
-      
     # Add steps to the job
     # See: https://circleci.com/docs/configuration-reference/#steps
     steps:
       - checkout
       #- run: "sleep 30 && curl -vL http://copo-new.cyverseuk.org:8000/copo"
-      - run: "sleep 30"    
-      - run: "docker ps"
+      - run: "sleep 30 && curl -vL http://127.0.0.1:8000/copo"    
+      - run: "python -version"
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
