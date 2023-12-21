@@ -79,7 +79,8 @@ jobs:
     steps:
       - checkout
       #- run: "sleep 30 && curl -vL http://copo-new.cyverseuk.org:8000/copo"
-      - run: "sleep 30 && curl -vL http://127.0.0.1:8000/copo"    
+      - run: "sleep 30"    
+      - run: "docker ps"
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
