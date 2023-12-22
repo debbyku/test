@@ -20,8 +20,8 @@ jobs:
       - setup_remote_docker
       - run: |
           docker-compose up -d
+          curl http://127.0.0.1:8000/copo
           docker exec $(docker-compose ps -q copo_web) bash -c 'python manage.py makemigrations && python manage.py makemigrations allauth && python manage.py migrate && python manage.py setup_sequencing_centres'
-      - run: "curl http://127.0.0.1:8000/copo"
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
 workflows:
