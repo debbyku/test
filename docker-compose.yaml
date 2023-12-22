@@ -53,9 +53,9 @@ services:
       - ENA_V2_SERVICE_ASYNC=https://wwwdev.ebi.ac.uk/ena/submit/webin-v2/submit/queue
       - B2DROP_PERMITS=/copo/b2drop/permits
     depends_on:
-      - redis
-      - postgres
-      - mongo
+      - copo_redis
+      - copo_postgres
+      - copo_mongo
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000"]
       interval: 2m
