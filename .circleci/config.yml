@@ -48,7 +48,7 @@ jobs:
                 echo "The '${SERVICE}' is ready to be tested."
               }
   
-              wait_for_readiness  8080
+              wait_for_readiness  8000
   
       - run: "curl http://127.0.0.1:8000/copo"
 
