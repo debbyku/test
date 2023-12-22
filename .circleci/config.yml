@@ -21,8 +21,8 @@ jobs:
       - setup_remote_docker
       - run: |
           docker-compose up -d
-          docker exec $(docker-compose ps -q copo_web) bash -c 'ps -aef'
-          docker exec $(docker-compose ps -q copo_web) bash -c 'python manage.py makemigrations && python manage.py makemigrations allauth && python manage.py migrate && python manage.py setup_sequencing_centres && curl -v http://127.0.0.1:8000'
+          docker exec $(docker-compose ps -q copo_web) bash -c 'python manage.py makemigrations && python manage.py makemigrations allauth && python manage.py migrate && python manage.py setup_sequencing_centres'
+          docker logs $(docker-compose ps -q copo_web)  
       - run:
           name: wait for copo_web
           command: |
@@ -40,6 +40,7 @@ jobs:
                   if [ $REMAINING_TIME -lt 0 ];
                   then
                     echo "Error: '${SERVICE}' did not start in expected duration."
+                    docker logs   $(docker-compose ps -q copo_web)  
                     exit 1
                   fi
                   echo "Waiting for '${SERVICE}' to start... remaning ${REMAINING_TIME} seconds."
