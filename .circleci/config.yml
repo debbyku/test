@@ -16,7 +16,7 @@ jobs:
     # See: https://circleci.com/docs/configuration-reference/#steps
     steps:
       - checkout
-      - attach_workspace: {at: /home/circleci}
+      #- attach_workspace: {at: /home/circleci}
       - run: |
           docker-compose up 
           docker exec ./ $(docker-compose ps -q web_copo) bash -c 'python manage.py makemigrations && python manage.py makemigrations allauth && python manage.py migrate && python manage.py setup_sequencing_centres'
