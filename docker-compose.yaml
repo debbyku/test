@@ -2,6 +2,8 @@ version: "3.9"
 services:
   copo_web:
     image: copo/copo-new-web:v2.0.5
+    ports:
+      - "8000:8000"
     entrypoint:
       - bash
       - -c
@@ -65,6 +67,8 @@ services:
 
   copo_postgres:
     image: postgres:15-bullseye
+    ports:
+      - "5432:5432"  
     environment:
       - POSTGRES_DB=copo
       - POSTGRES_USER=copo_user
@@ -72,6 +76,8 @@ services:
 
   copo_mongo:
     image: copo/copo-mongo:v7.0.1
+    ports:
+      - "27017:27017"
     command: mongod --replSet rs0 --bind_ip_all --keyFile /data/replica.key
     entrypoint:
        - bash
