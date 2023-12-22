@@ -1,0 +1,90 @@
+version: "3.9"
+services:
+  copo_web:
+    image: copo/copo-new-web:v2.0.5
+    entrypoint:
+      - bash
+      - -c
+      - |
+        rsync -avhW --no-compress --progress  /code/ /copo/ && rm -rf /code/ && python manage.py migrate && python manage.py social_accounts && python manage.py setup_groups && python manage.py setup_schemas && python manage.py createcachetable && python manage.py collectstatic --noinput &&  supervisord -c src/celery.conf && supervisorctl -c src/celery.conf start all &&  /usr/local/bin/daphne -b 0.0.0.0 -p 8000 src.main_config.asgi:application
+    environment:
+      - ENVIRONMENT_TYPE=demo
+      - ASPERA_PLUGIN_DIRECTORY=aspera_linux_plugin
+      - SECRET_KEY_FILE=/run/secrets/copo_web_secret_key
+      - MEDIA_PATH=media/
+      - DEBUG=true
+      - REDIS_HOST=copo_redis
+      - REDIS_PORT=6379
+      - WEBIN_USER=${WEBIN_USER}
+      - WEBIN_USER_PASSWORD=${WEBIN_USER_PASSWORD}
+      - ENA_SERVICE=https://wwwdev.ebi.ac.uk/ena/submit/drop-box/submit/
+      - MONGO_USER=copo_user
+      - MONGO_USER_PASSWORD=password
+      - MONGO_DB=copo_mongo
+      - MONGO_HOST=copo_mongo
+      - MONGO_PORT=27017
+      - MONGO_MAX_POOL_SIZE=100
+      - POSTGRES_DB=copo
+      - POSTGRES_USER=copo_user
+      - POSTGRES_PORT=5432
+      - POSTGRES_SERVICE=copo_postgres
+      - POSTGRES_PASSWORD=password
+      - ORCID_SECRET=${ORCID_SECRET}
+      - ORCID_CLIENT=${ORCID_CLIENT}
+      - NIH_API_KEY=${NIH_API_KEY}
+      - PUBLIC_NAME_SERVICE_API_KEY=${PUBLIC_NAME_SERVICE_API_KEY}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
+      - MAIL_PORT=587
+      - MAIL_ADDRESS=data@earlham.ac.uk
+      - MAIL_SERVER=outlook.office365.com
+      - MAIL_USERNAME=eidata@nbi.ac.uk
+      - ALLOWED_HOSTS=
+      - PUBLIC_NAME_SERVICE=https://id.tol.sanger.ac.uk/api/v2/
+      - ENA_ENDPOINT_REPORT=https://wwwdev.ebi.ac.uk/ena/submit/report/samples
+      - ASPERA_PATH=/root/.aspera/cli
+      - BIOIMAGE_PATH=${BIOIMAGE_PATH}
+      - BIOIMAGE_SERVER=bsaspera_w@hx-fasp-1.ebi.ac.uk
+      - ECS_SECRET_KEY=${ECS_SECRET_KEY}
+      - ECS_ACCESS_KEY_ID=copo@nbi.ac.uk
+      - ECS_ENDPOINT=http://ei-copo.obj-data.nbi.ac.uk
+      - ENA_V2_SERVICE_SYNC=https://wwwdev.ebi.ac.uk/ena/submit/webin-v2/submit
+      - ENA_V2_SERVICE_ASYNC=https://wwwdev.ebi.ac.uk/ena/submit/webin-v2/submit/queue
+      - B2DROP_PERMITS=/copo/b2drop/permits
+    depends_on:
+      - redis
+      - postgres
+      - mongo
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000"]
+      interval: 2m
+      timeout: 10s
+      retries: 3
+      start_period: 50s
+  copo_redis:
+    image: copo/copo-redis:redis-v6.2.6.18
+
+  copo_postgres:
+    image: postgres:15-bullseye
+    environment:
+      - POSTGRES_DB=copo
+      - POSTGRES_USER=copo_user
+      - POSTGRES_PASSWORD=password
+
+  copo_mongo:
+    image: copo/copo-mongo:v7.0.1
+    command: mongod --replSet rs0 --bind_ip_all --keyFile /data/replica.key
+    entrypoint:
+       - bash
+       - -c
+       - |
+          openssl rand -base64 756 > /data/replica.key
+          chmod 400 /data/replica.key
+          chown 999:999 /data/replica.key
+          exec docker-entrypoint.sh $$@
+    hostname: copo-mongo-server
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=copo_admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+      - MONGO_USER=copo_user
+      - MONGO_USER_PASSWORD=password
+      - MONGO_DB=copo_mongo
