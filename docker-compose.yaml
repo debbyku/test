@@ -2,6 +2,8 @@ version: "3.9"
 services:
   copo_web:
     image: copo/copo-new-web:v2.0.5
+    ports:
+      - "8000:8000"
     entrypoint:
       - bash
       - -c
@@ -10,7 +12,7 @@ services:
     environment:
       - ENVIRONMENT_TYPE=demo
       - ASPERA_PLUGIN_DIRECTORY=aspera_linux_plugin
-      - SECRET_KEY_FILE=/run/secrets/copo_web_secret_key
+      - SECRET_KEY=${SECRET_KEY}
       - MEDIA_PATH=media/
       - DEBUG=true
       - REDIS_HOST=copo_redis
@@ -51,20 +53,22 @@ services:
       - ENA_V2_SERVICE_ASYNC=https://wwwdev.ebi.ac.uk/ena/submit/webin-v2/submit/queue
       - B2DROP_PERMITS=/copo/b2drop/permits
     depends_on:
-      - redis
-      - postgres
-      - mongo
+      - copo_redis
+      - copo_postgres
+      - copo_mongo
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000"]
-      interval: 2m
+      interval: 1m
       timeout: 10s
       retries: 3
-      start_period: 50s
+      start_period: 30s
   copo_redis:
     image: copo/copo-redis:redis-v6.2.6.18
 
   copo_postgres:
     image: postgres:15-bullseye
+    ports:
+      - "5432:5432"  
     environment:
       - POSTGRES_DB=copo
       - POSTGRES_USER=copo_user
@@ -72,16 +76,8 @@ services:
 
   copo_mongo:
     image: copo/copo-mongo:v7.0.1
-    command: mongod --replSet rs0 --bind_ip_all --keyFile /data/replica.key
-    entrypoint:
-       - bash
-       - -c
-       - |
-          openssl rand -base64 756 > /data/replica.key
-          chmod 400 /data/replica.key
-          chown 999:999 /data/replica.key
-          exec docker-entrypoint.sh $$@
-    hostname: copo-mongo-server
+    ports:
+      - "27017:27017"
     environment:
       - MONGO_INITDB_ROOT_USERNAME=copo_admin
       - MONGO_INITDB_ROOT_PASSWORD=password
