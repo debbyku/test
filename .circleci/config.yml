@@ -42,6 +42,7 @@ jobs:
                     echo "Error: ${SERVICE} did not start in expected duration."
                     docker logs   $(docker-compose ps -q copo_web)  
                     docker ps
+                    docker exec $(docker-compose ps -q copo_web) bash -c 'curl http://127.0.0.1:8000'
                     curl http://127.0.0.1:8000/
                     exit 1
                   fi
