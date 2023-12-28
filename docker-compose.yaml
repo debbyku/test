@@ -63,7 +63,7 @@ services:
       retries: 3
       start_period: 30s
     volumes:
-      - ./testsuits:/copo/testsuits
+      - ./testsuits:/testsuits
   copo_redis:
     image: copo/copo-redis:redis-v6.2.6.18
 
