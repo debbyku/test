@@ -58,10 +58,10 @@ services:
       - copo_mongo
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000"]
-      interval: 2m
+      interval: 1m
       timeout: 10s
       retries: 3
-      start_period: 50s
+      start_period: 30s
   copo_redis:
     image: copo/copo-redis:redis-v6.2.6.18
 
