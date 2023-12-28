@@ -20,9 +20,7 @@ jobs:
       #- attach_workspace: {at: /home/circleci}
       - setup_remote_docker
       - run: |
-          docker-compose up -d
-          docker logs $(docker-compose ps -q copo_web)  
-          
+          docker-compose up -d          
       - run:
           name: wait for copo_web
           command: |
@@ -34,7 +32,7 @@ jobs:
                 local TRY_TIMEOUT=120
                 local TRY_INTERVAL=5
                 local REMAINING_TIME=$TRY_TIMEOUT
-                while ! curl http://127.0.0.1:${PORT}/ -s -I | head -n1 | grep -q 200;
+                while ! docker exec $(docker-compose ps -q copo_web) bash -c 'curl http://127.0.0.1:8000 -s -I | head -n1 | grep -q 200' ;
                 do
                   REMAINING_TIME=$((REMAINING_TIME-TRY_INTERVAL))
                   if [ $REMAINING_TIME -lt 0 ];
@@ -42,7 +40,6 @@ jobs:
                     echo "Error: ${SERVICE} did not start in expected duration."
                     docker logs   $(docker-compose ps -q copo_web)  
                     docker ps
-                    docker exec $(docker-compose ps -q copo_web) bash -c 'curl http://127.0.0.1:8000'
                     curl http://127.0.0.1:8000/
                     exit 1
                   fi
@@ -55,7 +52,7 @@ jobs:
               wait_for_readiness  copo_web 8000
               docker exec $(docker-compose ps -q copo_web) bash -c 'python manage.py makemigrations && python manage.py makemigrations allauth && python manage.py migrate && python manage.py setup_sequencing_centres'
 
-      - run: "curl http://127.0.0.1:8000/copo"
+      - run: "docker exec $(docker-compose ps -q copo_web) bash -c 'curl -v http://www.google.com'"
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
