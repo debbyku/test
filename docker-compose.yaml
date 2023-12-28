@@ -12,7 +12,7 @@ services:
     environment:
       - ENVIRONMENT_TYPE=demo
       - ASPERA_PLUGIN_DIRECTORY=aspera_linux_plugin
-      - SECRET_KEY_FILE=/run/secrets/copo_web_secret_key
+      - SECRET_KEY=${SECRET_KEY}
       - MEDIA_PATH=media/
       - DEBUG=true
       - REDIS_HOST=copo_redis
