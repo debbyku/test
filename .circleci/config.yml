@@ -34,7 +34,7 @@ jobs:
                 local TRY_TIMEOUT=120
                 local TRY_INTERVAL=5
                 local REMAINING_TIME=$TRY_TIMEOUT
-                while ! curl http://{SERVICE}:${PORT}/ -s -I | head -n1 | grep -q 200;
+                while ! curl http://${SERVICE}:${PORT}/ -s -I | head -n1 | grep -q 200;
                 do
                   REMAINING_TIME=$((REMAINING_TIME-TRY_INTERVAL))
                   if [ $REMAINING_TIME -lt 0 ];
