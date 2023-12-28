@@ -29,26 +29,27 @@ jobs:
               set -xe
 
               wait_for_readiness() {
-                local PORT="$1"
+                local SERVICE="$1"
+                local PORT="$2"
                 local TRY_TIMEOUT=120
                 local TRY_INTERVAL=5
                 local REMAINING_TIME=$TRY_TIMEOUT
-                while ! curl http://localhost:${PORT}/ -s -I | head -n1 | grep -q 200;
+                while ! curl http://{SERVICE}:${PORT}/ -s -I | head -n1 | grep -q 200;
                 do
                   REMAINING_TIME=$((REMAINING_TIME-TRY_INTERVAL))
                   if [ $REMAINING_TIME -lt 0 ];
                   then
-                    echo "Error: '$(PORT)' did not start in expected duration."
+                    echo "Error: '$(SERVICE)' did not start in expected duration."
                     docker logs   $(docker-compose ps -q copo_web)  
                     exit 1
                   fi
-                  echo "Waiting for '${PORT}' to start... remaning ${REMAINING_TIME} seconds."
+                  echo "Waiting for '${SERVICE}' to start... remaning ${REMAINING_TIME} seconds."
                   sleep $TRY_INTERVAL
                 done
-                echo "The '${SERVICE}' is ready to be tested."
+                echo "The ${SERVICE} is ready to be tested."
               }
   
-              wait_for_readiness  8000
+              wait_for_readiness  copo_web 8000
               docker exec $(docker-compose ps -q copo_web) bash -c 'python manage.py makemigrations && python manage.py makemigrations allauth && python manage.py migrate && python manage.py setup_sequencing_centres'
 
       - run: "curl http://127.0.0.1:8000/copo"
