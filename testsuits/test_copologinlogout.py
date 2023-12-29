@@ -10,7 +10,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from chromedriver_py import binary_path
-
+import os
 
 class TestCopologinlogout():
   SERVER_TIMEOUT = 10
@@ -26,7 +26,7 @@ class TestCopologinlogout():
     options.add_argument("--enable-file-cookies")
     cls.driver = webdriver.Remote(command_executor="http://copo_browser:3000/webdriver", options=options)
     cls.driver.implicitly_wait(5) 
-    #self.driver.delete_all_cookies()
+    cls.driver.delete_all_cookies()
     cls.vars = {}
  
   @classmethod
@@ -41,8 +41,8 @@ class TestCopologinlogout():
     WebDriverWait(self.driver, 10).until(expected_conditions.presence_of_element_located((By.ID, "onetrust-reject-all-handler")))
     self.driver.find_element(By.ID, "onetrust-reject-all-handler").click()
     WebDriverWait(self.driver, 30).until(expected_conditions.visibility_of_element_located((By.ID, "password")))
-    self.driver.find_element(By.ID, "password").send_keys("Iam1testUser")
-    self.driver.find_element(By.ID, "username").send_keys("debby.ku@earlham.ac.uk")
+    self.driver.find_element(By.ID, "password").send_keys(os.environ['COPO_WEB_USER_PW'])
+    self.driver.find_element(By.ID, "username").send_keys(os.environ['COPO_WEB_USER'])
     self.driver.find_element(By.CSS_SELECTOR, "#signin-button > .mat-button-wrapper").click()
     time.sleep(5)
     WebDriverWait(self.driver, 10).until(expected_conditions.presence_of_element_located((By.ID, "acceptCookies")))
