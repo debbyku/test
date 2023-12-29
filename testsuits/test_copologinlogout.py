@@ -44,7 +44,7 @@ class TestCopologinlogout():
     self.driver.find_element(By.ID, "password").send_keys(os.environ['COPO_WEB_USER_PW'])
     self.driver.find_element(By.ID, "username").send_keys(os.environ['COPO_WEB_USER'])
     self.driver.find_element(By.CSS_SELECTOR, "#signin-button > .mat-button-wrapper").click()
-    time.sleep(5)
+    time.sleep(10)
     WebDriverWait(self.driver, 10).until(expected_conditions.presence_of_element_located((By.ID, "acceptCookies")))
     self.driver.find_element(By.ID, "acceptCookies").click()
     time.sleep(5)
