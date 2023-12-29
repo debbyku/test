@@ -34,7 +34,7 @@ class TestCopologinlogout():
   
   def test_login(self):
     self.driver.get("http://copo-new.cyverseuk.org:8000/copo")
-    self.wait_for_page()
+    #self.wait_for_page()
     self.driver.set_window_size(1188, 839)
     self.driver.find_element(By.CSS_SELECTOR, ".login-button").click()
     WebDriverWait(self.driver, 10).until(expected_conditions.presence_of_element_located((By.ID, "onetrust-reject-all-handler")))
@@ -52,7 +52,7 @@ class TestCopologinlogout():
   
   def test_logout(self):
     self.driver.get("http://copo-new.cyverseuk.org:8000/copo/")
-    self.wait_for_page()
+    #self.wait_for_page()
     self.driver.set_window_size(1188, 839)
     self.driver.find_element(By.CSS_SELECTOR, ".caret").click()
     self.driver.find_element(By.XPATH, "//span[contains(.,\'Logout\')]").click()
