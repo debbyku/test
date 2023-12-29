@@ -86,3 +86,6 @@ services:
       - MONGO_USER=copo_user
       - MONGO_USER_PASSWORD=password
       - MONGO_DB=copo_mongo
+
+  copo_browser:
+    image: browserless/chrome
