@@ -89,3 +89,5 @@ services:
 
   copo_browser:
     image: browserless/chrome
+    links:
+      - copo_web:copo-new.cyverseuk.org

@@ -33,7 +33,7 @@ class TestCopologinlogout():
     cls.driver.quit()
   
   def test_login(self):
-    self.driver.get("http://copo_web:8000/copo")
+    self.driver.get("http://copo-new.cyverseuk.org:8000/copo")
     self.wait_for_page()
     self.driver.set_window_size(1188, 839)
     self.driver.find_element(By.CSS_SELECTOR, ".login-button").click()
@@ -51,7 +51,7 @@ class TestCopologinlogout():
     assert len(elements) > 0
   
   def test_logout(self):
-    self.driver.get("http://copo_web:8000/copo/")
+    self.driver.get("http://copo-new.cyverseuk.org:8000/copo/")
     self.wait_for_page()
     self.driver.set_window_size(1188, 839)
     self.driver.find_element(By.CSS_SELECTOR, ".caret").click()
