@@ -21,6 +21,7 @@ class TestCopologinlogout():
     options.enable_downloads = True
     options.add_argument("--headless")
     options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--disable-infobars")
     options.add_argument("--enable-file-cookies")
     cls.driver = webdriver.Remote(command_executor="http://copo_browser:3000/webdriver", options=options)
