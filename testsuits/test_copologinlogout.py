@@ -23,7 +23,7 @@ class TestCopologinlogout():
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-infobars")
     options.add_argument("--enable-file-cookies")
-    cls.driver = webdriver.Remote(command_executor="http://127.0.0.1:3000/webdriver", options=options)
+    cls.driver = webdriver.Remote(command_executor="http://copo_browser:3000/webdriver", options=options)
     cls.driver.implicitly_wait(5) 
     #self.driver.delete_all_cookies()
     cls.vars = {}
