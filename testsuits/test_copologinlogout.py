@@ -19,7 +19,7 @@ class TestCopologinlogout():
   def setup_class(cls):
     options = webdriver.ChromeOptions()
     options.enable_downloads = True
-    cls.driver = webdriver.Remote(common_executor="http://copo_browser:3000", options=options)
+    cls.driver = webdriver.Remote(command_executor="http://copo_browser:3000", options=options)
     cls.driver.implicitly_wait(5) 
     #self.driver.delete_all_cookies()
     cls.vars = {}
