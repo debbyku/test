@@ -55,7 +55,7 @@ class TestCopologinlogout():
     self.driver.get("http://copo-new.cyverseuk.org:8000/copo/")
     self.wait_for_page()
     self.driver.set_window_size(1188, 839)
-    sleep(5)
+    time.sleep(5)
     self.driver.find_element(By.CSS_SELECTOR, ".caret").click()
     self.driver.find_element(By.XPATH, "//span[contains(.,\'Logout\')]").click()
     self.driver.find_element(By.CSS_SELECTOR, ".btn").click()
