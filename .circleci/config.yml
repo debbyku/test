@@ -56,6 +56,7 @@ jobs:
       - run: "docker exec $(docker-compose ps -q copo_browser) bash -c 'curl -v http://copo-new.cyverseuk.org:8000/copo' "
       #- run: "docker exec $(docker-compose ps -q copo_web) bash -c 'wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb ; dpkg -i google-chrome-stable_current_amd64.deb; apt -y --fix-broken install' "
       - run: "docker exec $(docker-compose ps -q copo_web) bash -c  'pip install selenium --upgrade && pip install --upgrade pytest && pip install chromedriver_py && python -m pytest /testsuits/'"
+      - run: "docker logs $(docker-compose ps -q copo_web)"
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
