@@ -9,7 +9,6 @@ from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-from chromedriver_py import binary_path
 import os
 
 class TestCopologinlogout():
@@ -36,7 +35,7 @@ class TestCopologinlogout():
   def test_login(self):
     self.driver.get("http://copo-new.cyverseuk.org:8000/copo")
     self.wait_for_page()
-    #self.driver.set_window_size(1188, 839)
+    self.driver.set_window_size(1188, 839)
     self.driver.find_element(By.CSS_SELECTOR, ".login-button").click()
     WebDriverWait(self.driver, 10).until(expected_conditions.presence_of_element_located((By.ID, "onetrust-reject-all-handler")))
     self.driver.find_element(By.ID, "onetrust-reject-all-handler").click()
@@ -44,10 +43,8 @@ class TestCopologinlogout():
     self.driver.find_element(By.ID, "password").send_keys(os.environ['COPO_WEB_USER_PW'])
     self.driver.find_element(By.ID, "username").send_keys(os.environ['COPO_WEB_USER'])
     self.driver.find_element(By.CSS_SELECTOR, "#signin-button > .mat-button-wrapper").click()
-    time.sleep(10)
     WebDriverWait(self.driver, 10).until(expected_conditions.presence_of_element_located((By.ID, "acceptCookies")))
     self.driver.find_element(By.ID, "acceptCookies").click()
-    time.sleep(5)
     elements = self.driver.find_elements(By.XPATH, "//span[contains(.,\'Work Profiles\')]")
     assert len(elements) > 0
   
