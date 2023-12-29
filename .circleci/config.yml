@@ -51,7 +51,7 @@ jobs:
   
               wait_for_readiness  copo_web 8000
               docker exec $(docker-compose ps -q copo_web) bash -c 'python manage.py makemigrations && python manage.py makemigrations allauth && python manage.py migrate && python manage.py setup_sequencing_centres'
-
+      - run: "docker ps"
       - run: "docker cp testsuits $(docker-compose ps -q copo_web):/testsuits"
       #- run: "docker exec $(docker-compose ps -q copo_web) bash -c 'wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb ; dpkg -i google-chrome-stable_current_amd64.deb; apt -y --fix-broken install' "
       - run: "docker exec $(docker-compose ps -q copo_web) bash -c  'pip install selenium --upgrade && pip install --upgrade pytest && pip install chromedriver_py && python -m pytest /testsuits/'"
